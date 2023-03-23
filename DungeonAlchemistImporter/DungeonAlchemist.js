@@ -6,7 +6,7 @@ const DungeonAlchemistImporter = (() => {
   // eslint-disable-line no-unused-vars
 
   const scriptName = "DungeonAlchemistImporter";
-  const version = "0.0.4";
+  const version = "0.0.6";
   const lastUpdate = 20211220;
   const schemaVersion = 0.1;
   const defaultGridSize = 70;
@@ -188,6 +188,7 @@ const DungeonAlchemistImporter = (() => {
         },
         controller_by: map.get("_id"),
       };
+
       createObj(type, doorObj);
       log(doorObj);
     }
@@ -350,36 +351,42 @@ const DungeonAlchemistImporter = (() => {
       try {
         // parse the data
         const json = s.substring(endOfHeader);
-        const data = JSON.parse(json);
-
+        const data = JSON.parse(json)
         // determine the version
         let version = data.version;
-        if (typeof(version) === 'undefined') version = 1;
+		sendChat(version);
+		
+        if (typeof(version) === 'undefined')
+
+			version = 1;
 
         // load the player
         const player = getObj("player", msg.playerid);
-        //log("PLAYER:");
-        //log(player);
+        //log"PLAYER:");
+        //logplayer);
         const lastPageId = player.get("_lastpage");
-        //log(lastPageId);
+        //loglastPageId);
 
         // load the page
         const pageId = Campaign().get("playerpageid");
-        //log("Page id: " + pageId + " vs last page " + lastPageId);
-        const page = getObj("page", lastPageId);
-        //log("PAGE:");
-        //log(page);
+        //log"Page id: " + pageId + " vs last page " + lastPageId);
+        // page = getObj("page", lastPageId);
+        const page = getObj("page", pageId); // lastPageId currently None, don't know why
+        //log"PAGE:");
+        //logpage);
 
         // calculate the REAL grid size
         const gridSize = defaultGridSize * page.get("snapping_increment");
 
         // load the map
         const map = getMap(page, msg);
-        //log("MAP:");
-        //log(map);
+        //log"MAP:");
+        //logmap);
+		sendChat(data);
 
         // we are done - no map found
-        if (map === null) return;
+        if (map === null)
+			return;
 
         // resize the map properly
         resizeMap(gridSize, data.grid, page, map);
